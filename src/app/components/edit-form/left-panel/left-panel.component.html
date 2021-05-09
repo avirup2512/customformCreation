@@ -1,0 +1,236 @@
+<!-- <mat-accordion> -->
+<form [formGroup]="formEntityGroup" (change)="formChange($event)">
+    <ng-container formArrayName="groupArray">
+        <ng-container *ngFor="let group of groupEntityArray(); let i = index">
+            <div id="{{i}}g" cdkDropList [cdkDropListData]="groupArray(i)" [cdkDropListConnectedTo]="dropZoneArray"
+                (cdkDropListDropped)=drop($event,i)>
+                <ng-container [formGroupName]='i'>
+                    <mat-card class="mb-2 group" (click)="editGroupTitle('edit',$event,'_',i)">
+                        <ng-container *ngIf="!groupNameArray[i].isEditMode;else editModeTemplate">
+                            {{groupEntityArray()[i].value['groupName']}}
+                        </ng-container>
+                        <ng-template #editModeTemplate>
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Enter Group name</mat-label>
+                                <input matInput formControlName="groupName" (ngModelChange)="groupNameChange($event,i)">
+                            </mat-form-field>
+                            <button mat-raised-button class="ml-2 btnWhite"
+                                (click)="editGroupTitle('save',$event,groupNameArray[i].name,i)"
+                                color="primary">Save</button>
+                            <button mat-raised-button class="ml-2" (click)="editGroupTitle('cancel',$event,'',i)"
+                                color="warn">Cancel</button>
+                        </ng-template>
+                        <div class="float-right addButton">
+                            <button mat-button color="primary" (click)="stopPropagation($event)"
+                                matTooltip="This is Group tab.Click on Group Title to edit it">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                            <button mat-icon-button (click)="deleteGroup($event,i)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+                    </mat-card>
+                    <ng-container formArrayName="groupArray">
+                        <ng-container *ngFor="let item of groupArray(i);let j=index">
+                            <ng-container [formGroupName]='j'>
+                                <mat-expansion-panel class="mt-2 mb-2" (cdkDragStarted)="dragStart($event, i)"
+                                    [expanded]="true" cdkDrag>
+                                    <mat-icon class="matIcon">drag_handle</mat-icon>
+                                    <span class="mt-4 cardTitle">
+                                        <b>{{getGroup(i,j).value['listingText']}}</b>
+                                    </span>
+                                    <hr>
+                                    <div class="content row">
+                                        <ng-container [ngSwitch]="getGroup(i,j).value['entityType']">
+                                            <!-- HTML FOR COMMON NAME,LABEl, HINT TEXT, DESCRIPTION ETC FIELD FIELD STARTS -->
+                                            <ng-container
+                                                *ngIf="getGroup(i,j).value['entityType'] !=='button' && getGroup(i,j).value['entityType'] !== 'group'">
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                                                    <mat-form-field class="full-width" appearance="outline">
+                                                        <mat-label>name</mat-label>
+                                                        <input matInput formControlName="name"
+                                                            (change)="nameFieldChange(i,j,$event)">
+                                                        <mat-error>Name is required</mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                                                    <mat-form-field class="full-width" appearance="outline">
+                                                        <mat-label>Label</mat-label>
+                                                        <input matInput formControlName="label">
+                                                        <mat-error *ngIf="getErrorMessage(i,j).hasError">
+                                                            <ng-container [ngSwitch]="getErrorMessage(i,j).type">
+                                                                <span *ngSwitchCase="'maxLength'">Label can not be
+                                                                    greater than 25</span>
+                                                                <span *ngSwitchCase="'required'">Label is
+                                                                    required.</span>
+                                                            </ng-container>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6"
+                                                    *ngIf="getGroup(i,j).value['hint']">
+                                                    <mat-form-field class="full-width" appearance="outline">
+                                                        <mat-label>Hint text
+                                                        </mat-label>
+                                                        <input matInput formControlName="hintText">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6"
+                                                    *ngIf="getGroup(i,j).value['responseValidation']">
+                                                    <mat-form-field class="full-width" appearance="outline">
+                                                        <mat-label>Response validation</mat-label>
+                                                        <input matInput formControlName="responseValidationText">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6"
+                                                    *ngIf="getGroup(i,j).value['description']">
+                                                    <mat-form-field class="full-width" appearance="outline">
+                                                        <mat-label>Description</mat-label>
+                                                        <textarea matInput formControlName="descriptionText">
+                                                                </textarea>
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
+                                            <!-- HTML FOR COMMON NAME,LABEl, HINT TEXT, DESCRIPTION ETC FIELD FIELD ENDS -->
+                                            <!-- HTML FOR DATE FIELD STARTS -->
+                                            <div *ngSwitchCase="'dateField'">
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                                                    <mat-form-field class="full-width" appearance="outline">
+                                                        <mat-label>Select date</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <!-- HTML FOR DATE FIELD ENDS -->
+                                            <!-- HTML FOR BUTTON FIELD STARTS -->
+                                            <ng-container *ngSwitchCase="'button'">
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                                                    <mat-form-field class="full-width" appearance="outline">
+                                                        <mat-label>Button name</mat-label>
+                                                        <input matInput formControlName="name">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                                                    <mat-form-field class="full-width" appearance="outline">
+                                                        <mat-label>Response validation</mat-label>
+                                                        <input matInput formControlName="responseValidationText">
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
+                                            <!-- HTML FOR BUTTON FIELD ENDS -->
+                                            <!-- HTML FOR DROPDOWN STARTS -->
+                                            <ng-container *ngSwitchCase="'dropdown'">
+                                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                                    <mat-radio-group (change)="valueTypeChange(i,j)"
+                                                        formControlName="valueType">
+                                                        <mat-radio-button value="static">Satic value</mat-radio-button>
+                                                        <mat-radio-button value="dynamic" class="ml-2">Dynamic value
+                                                        </mat-radio-button>
+                                                    </mat-radio-group>
+                                                    <mat-radio-group (change)="selectTypeChange()" class="float-right"
+                                                        formControlName="selectType">
+                                                        <mat-radio-button value="single">Single select
+                                                        </mat-radio-button>
+                                                        <mat-radio-button value="multiple" class="ml-2">Multi select
+                                                        </mat-radio-button>
+                                                    </mat-radio-group>
+                                                </div>
+                                                <!-- HTML FOR STATIC VALUE STARTS -->
+                                                <div class="col-sm-12 col-md-12 col-lg-12 pt-2 pb-2">
+                                                    <ng-container
+                                                        *ngIf="getGroup(i,j).value['valueType'] == 'static'; else dynamicTemplate ">
+                                                        <ng-container formArrayName="dropDownOptions">
+                                                            <mat-list>
+                                                                <mat-list-item
+                                                                    class="col-sm-12 col-md-12 col-lg-12 mb-3"
+                                                                    *ngFor="let options of getDropDownArray(i,j); let y = index">
+                                                                    <ng-container [formGroupName]="y">
+                                                                        <mat-form-field class="full-width"
+                                                                            appearance="outline">
+                                                                            <mat-label>Enter option
+                                                                            </mat-label>
+                                                                            <input matInput formControlName="option">
+                                                                        </mat-form-field>
+                                                                    </ng-container>
+                                                                    <p class="float-right">
+                                                                        <button mat-icon-button
+                                                                            (click)="deleteOption(i,j,y)">
+                                                                            <mat-icon>delete</mat-icon>
+                                                                        </button>
+                                                                    </p>
+                                                                </mat-list-item>
+                                                            </mat-list>
+                                                        </ng-container>
+
+                                                        <button mat-raised-button color="primary"
+                                                            (click)="addOption(i,j,$event)">
+                                                            Add Option
+                                                        </button>
+                                                    </ng-container>
+                                                    <ng-template #dynamicTemplate>
+                                                        <mat-form-field class="full-width" appearance="outline">
+                                                            <mat-label>Enter Url</mat-label>
+                                                            <textarea matInput formControlName="url">
+                                                                    </textarea>
+                                                        </mat-form-field>
+                                                    </ng-template>
+                                                </div>
+                                                <!-- HTML FOR STATIC VALUE ENDS -->
+                                            </ng-container>
+                                            <!-- HTML FOR DROPDOWN ENDS -->
+                                        </ng-container>
+                                    </div>
+                                    <div>
+                                        <hr>
+                                        <ng-container *ngIf="getGroup(i,j).value['hasFooterButton']">
+                                            <div class="float-left">
+                                                <section class="example-section">
+                                                    <ng-container class="ml-2 mr-2">
+                                                        <mat-checkbox (change)="formChange($event)"
+                                                            formControlName="required">
+                                                            Required
+                                                        </mat-checkbox>
+                                                    </ng-container>
+                                                    <ng-container class="ml-2 mr-2">
+                                                        <mat-checkbox (change)="formChange($event)"
+                                                            formControlName="description">
+                                                            Description
+                                                        </mat-checkbox>
+                                                    </ng-container>
+                                                    <ng-container class="ml-2 mr-2">
+                                                        <mat-checkbox formControlName="hint"
+                                                            (change)="formChange($event)">
+                                                            Hint Text
+                                                        </mat-checkbox>
+                                                    </ng-container>
+                                                    <ng-container class="ml-2 mr-2">
+                                                        <mat-checkbox (change)="formChange($event)"
+                                                            formControlName="responseValidation">
+                                                            Response validation
+                                                        </mat-checkbox>
+                                                    </ng-container>
+                                                </section>
+                                            </div>
+                                            <div class="float-right">
+                                                <section class="example-section">
+                                                    <button mat-icon-button (click)="copyEntity(i,j)">
+                                                        <mat-icon>file_copy</mat-icon>
+                                                    </button>
+                                                    <button mat-icon-button (click)="deleteEntity(i,j)">
+                                                        <mat-icon>delete</mat-icon>
+                                                    </button>
+                                                </section>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </mat-expansion-panel>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+    </ng-container>
+</form>
+
+<!-- </mat-accordion> -->

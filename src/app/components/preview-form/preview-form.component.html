@@ -1,0 +1,146 @@
+<div class="container">
+    <div class="col-sm-12 col-md-12 col-lg-12 mt-3 pr-0">
+        <div class="float-right">
+            <mat-button-toggle-group name="EditPreview">
+                <mat-button-toggle value="edit" (click)="goEdit()">Edit</mat-button-toggle>
+                <mat-button-toggle [checked]="true" value="preview">Preview</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 mt-3">
+            <mat-card>
+                <h4>{{formName}}</h4>
+                <p>{{formDescription}}</p>
+                <hr>
+                <form [formGroup]="previewForm">
+                    <ng-container formArrayName="groupArray">
+                        <div class="" *ngFor="let item of groupEntityArray(); let i = index">
+                            <ng-container [formGroupName]="i">
+                                <p><b>{{groupEntityArray()[i].value['groupName']}}</b></p>
+                                <hr>
+                                <ng-container formArrayName="groupArray">
+                                    <div class="row">
+                                        <ng-container *ngFor="let group of groupArray(i); let j=index">
+                                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                                <ng-container [formGroupName]="j">
+                                                    <ng-container
+                                                        *ngIf="groupArray(i)[j].value.hasOwnProperty('entityType')">
+                                                        <p *ngIf="groupArray(i)[j].value.hasOwnProperty('entityType') !== 'button'"
+                                                            class="heading">{{groupArray(i)[j].value['name']}}</p>
+                                                        <p class="descriptionText"
+                                                            *ngIf="groupArray(i)[j].value['description']">
+                                                            {{groupArray(i)[j].value['descriptionText']}}
+                                                        </p>
+                                                        <ng-container [ngSwitch]="groupArray(i)[j].value['entityType']">
+                                                            <!-- HTML FOR TEXT AREA STARTS -->
+                                                            <ng-container *ngSwitchCase="'textArea'">
+                                                                <mat-form-field class="full-width" appearance="outline">
+                                                                    <mat-label>{{groupArray(i)[j].value['label']}}
+                                                                    </mat-label>
+                                                                    <textarea matInput
+                                                                        formControlName="{{groupArray(i)[j].value['entityId']}}">
+                                                                    </textarea>
+                                                                </mat-form-field>
+                                                                <ng-container *ngIf="groupArray(i)[j].value['hint']">
+                                                                    <mat-icon
+                                                                        matTooltip="{{groupArray(i)[j].value['hintText']}}"
+                                                                        [matTooltipPosition]="'below'"
+                                                                        matTooltipHideDelay="1000">info</mat-icon>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                            <!-- HTML FOR TEXT AREA ENDS -->
+                                                            <!-- HTML FOR TEXT FIELD STARTS -->
+                                                            <ng-container *ngSwitchCase="'textField'">
+                                                                <mat-form-field class="full-width" appearance="outline">
+                                                                    <mat-label>{{groupArray(i)[j].value['label']}}
+                                                                    </mat-label>
+                                                                    <textarea matInput
+                                                                        formControlName="{{groupArray(i)[j].value['entityId']}}">
+                                                                    </textarea>
+                                                                </mat-form-field>
+                                                                <ng-container *ngIf="groupArray(i)[j].value['hint']">
+                                                                    <mat-icon
+                                                                        matTooltip="{{groupArray(i)[j].value['hintText']}}"
+                                                                        [matTooltipPosition]="'below'"
+                                                                        matTooltipHideDelay="1000">info</mat-icon>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                            <!-- HTML FOR TEXT FIELD ENDS -->
+                                                            <!-- HTML FOR DATE FIELD STARTS -->
+                                                            <ng-container *ngSwitchCase="'dateField'">
+                                                                <mat-form-field appearance="fill">
+                                                                    <mat-label>{{groupArray(i)[j].value['label']}}
+                                                                    </mat-label>
+                                                                    <input
+                                                                        formControlName="{{groupArray(i)[j].value['entityId']}}"
+                                                                        matInput [matDatepicker]="picker">
+                                                                    <mat-datepicker-toggle matSuffix [for]="picker">
+                                                                    </mat-datepicker-toggle>
+                                                                    <mat-datepicker #picker></mat-datepicker>
+                                                                </mat-form-field>
+                                                                <ng-container *ngIf="groupArray(i)[j].value['hint']">
+                                                                    <mat-icon
+                                                                        matTooltip="{{groupArray(i)[j].value['hintText']}}"
+                                                                        [matTooltipPosition]="'below'"
+                                                                        matTooltipHideDelay="1000">info</mat-icon>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                            <!-- HTML FOR DATE FIELD ENDS -->
+                                                            <!-- HTML FOR BUTTON STARTS -->
+                                                            <ng-container *ngSwitchCase="'button'">
+                                                                <div class="col-sm-12 col-md-12 col-lg-12 p-0">
+                                                                    <button mat-raised-button color="primary"
+                                                                        class="mr-2">{{groupArray(i)[j].value['name']}}</button>
+                                                                </div>
+                                                            </ng-container>
+                                                            <!-- HTML FOR BUTTON ENDS -->
+                                                            <!-- HTML FOR DROPDOWN STARTS -->
+                                                            <ng-container *ngSwitchCase="'dropdown'">
+                                                                <ng-container
+                                                                    *ngIf="groupArray(i)[j].value['selectType'] =='single'; else multipleselectTemplate">
+                                                                    <mat-form-field appearance="fill">
+                                                                        <mat-label>
+                                                                            {{groupArray(i)[j].value['label']}}
+                                                                        </mat-label>
+                                                                        <mat-select>
+                                                                            <mat-option
+                                                                                *ngFor="let option of groupArray(i)[j].value['dropDownOptions']"
+                                                                                [value]="option">
+                                                                                {{option.option}}
+                                                                            </mat-option>
+                                                                        </mat-select>
+                                                                    </mat-form-field>
+                                                                    <ng-container
+                                                                        *ngIf="groupArray(i)[j].value['hint']">
+                                                                        <mat-icon
+                                                                            matTooltip="{{groupArray(i)[j].value['hintText']}}"
+                                                                            [matTooltipPosition]="'below'"
+                                                                            matTooltipHideDelay="1000">info</mat-icon>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                                <ng-template #multipleselectTemplate>
+                                                                    <ng-select [multiple]="true"
+                                                                        placeholder="{{groupArray(i)[j].value['label']}}"
+                                                                        [items]="groupArray(i)[j].value['dropDownOptions']"
+                                                                        [bindLabel]="'option'">
+                                                                    </ng-select>
+                                                                </ng-template>
+                                                            </ng-container>
+                                                            <!-- HTML FOR DROPDOWN ENDS -->
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </form>
+            </mat-card>
+        </div>
+    </div>
+</div>

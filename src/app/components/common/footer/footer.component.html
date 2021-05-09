@@ -1,0 +1,29 @@
+<footer>
+    <div class="container pt-2 pb-2">
+        <ng-container *ngIf="inBasicDetailsPage; else notInBasicDetailsPage">
+            <button mat-raised-button color="primary" disabled>Save as draft</button>
+            <div class="float-right">
+                <button mat-raised-button color="primary" (click)="clickOnNext()">Next</button>
+            </div>
+        </ng-container>
+        <ng-template #notInBasicDetailsPage>
+            <ng-container *ngIf="inEditPage; else notInEditPage">
+                <button mat-raised-button color="warn">Save as draft</button>
+                <div class="float-right">
+                    <button mat-raised-button color="primary" class="mr-2" (click)="clickOnPrevious()">Previous</button>
+                    <button mat-raised-button color="primary" (click)="clickOnSubmit()">Submit</button>
+                </div>
+            </ng-container>
+            <ng-template #notInEditPage>
+                <ng-container *ngIf="inPreviewPage">
+                    <button mat-raised-button color="primary" disabled>Save as draft</button>
+                    <div class="float-right">
+                        <button mat-raised-button color="primary" class="mr-2"
+                            (click)="clickOnPrevious()">Previous</button>
+                        <button mat-raised-button color="primary">Save</button>
+                    </div>
+                </ng-container>
+            </ng-template>
+        </ng-template>
+    </div>
+</footer>

@@ -1,0 +1,24 @@
+.position-right{
+    position: absolute;
+    right: 0;
+}
+
+.addButton button{
+    height:20px;
+    width:20px;
+    vertical-align: top;
+}
+.addButton mat-icon{
+    line-height: 4px;
+    font-size: 16px;
+    width: 21px;
+}
+
+.mat-list-base .mat-list-item, .mat-list-base .mat-list-option{
+    height: 37px;
+}
+
+.mat-list-base .mat-list-item .mat-list-item-content, .mat-list-base .mat-list-option .mat-list-item-content {
+    padding:0px !important;
+    font-size:14px;
+}

@@ -1,0 +1,8 @@
+<app-header [inBasicDetailsPage_]="inBasicDetailsPage" [inEditPage_]="inEditPage" [inPreviewPage_]="inPreviewPage">
+</app-header>
+<div class="mb-5">
+    <router-outlet></router-outlet>
+</div>
+<app-footer [inBasicDetailsPage_]="inBasicDetailsPage" [inEditPage_]="inEditPage" [inPreviewPage_]="inPreviewPage"
+    (clickNext)="clickOnNext($event)" (clickSubmit)="clickSubmit($event)" (clickPrevious)="clickPrevious($event)">
+</app-footer>
