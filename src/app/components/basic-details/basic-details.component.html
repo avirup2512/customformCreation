@@ -1,0 +1,64 @@
+<div class="container">
+    <form [formGroup]="basicDetailsForm">
+        <mat-card class="mt-5">
+            <p class="mb-0"><b>Basic Details</b></p>
+            <hr>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <mat-form-field class="full-width" appearance="outline">
+                            <mat-label>Custom Form Name</mat-label>
+                            <input matInput formControlName="formName" (change)="basicDetailsFormChange()">
+                            <mat-error>{{getErrorMessage()}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <mat-form-field class="full-width">
+                            <mat-label>Searched Keyword</mat-label>
+                            <mat-chip-list #chipList>
+                                <mat-chip *ngFor="let tag of tagList" [selectable]="selectable" [removable]="removable"
+                                    (removed)="removeTag(tag)">
+                                    {{tag}}
+                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                </mat-chip>
+                                <input placeholder="New Tag..." #fruitInput formControlName="searchedTags"
+                                    [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                                    [matChipInputAddOnBlur]="addOnBlur"
+                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                    (matChipInputTokenEnd)="addTag($event)">
+                            </mat-chip-list>
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                                <mat-option *ngFor="let tag of filteredTag | async" [value]="tag">
+                                    {{tag}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <mat-form-field class="full-width" appearance="outline">
+                            <mat-label>Description</mat-label>
+                            <textarea matInput formControlName="description"
+                                (change)="basicDetailsFormChange()"></textarea>
+                            <mat-error>{{getErrorMessage()}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="mt-2">
+            <p class="mb-0"><b>Create Form</b></p>
+            <hr>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <mat-radio-group formControlName="formType">
+                            <mat-radio-button value="new" [checked]="true">1. Create new</mat-radio-button>
+                            <mat-radio-button class="ml-2" value="preset" disabled>2. Select from existing
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </form>
+</div>

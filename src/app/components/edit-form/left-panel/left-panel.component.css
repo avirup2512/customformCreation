@@ -1,0 +1,40 @@
+.mat-checkbox{
+    margin:5px;
+    font-size:12px
+}
+
+.addButton button{
+    height:25px;
+    width:25px;
+}
+.addButton mat-icon{
+    line-height: 8px;
+    font-size:20px
+}
+
+.mat-list-base .mat-list-item, .mat-list-base .mat-list-option{
+    height: 37px;
+}
+.group{
+    border-left: 6px solid #3f51b5;
+    border-radius: 0px;
+    background:#536DFE;
+    color: #fff;
+}
+
+.btnWhite{
+    background-color:#fff;
+    color:#536DFE
+}
+
+.cardTitle{
+    vertical-align: super;
+    display: inline-block;
+}
+.matIcon{
+    cursor: pointer;
+}
+
+mat-icon {
+    font-size:20px
+}

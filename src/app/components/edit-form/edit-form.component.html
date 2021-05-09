@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="col-sm-12 col-md-12 col-lg-12 mt-3 pr-0">
+        <div class="float-right">
+            <mat-button-toggle-group name="EditPreview">
+                <mat-button-toggle [checked]="true" value="edit">Edit</mat-button-toggle>
+                <mat-button-toggle value="preview" (click)="goPreview()">Preview</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-8 col-lg-8 mt-3">
+            <app-left-panel (touchedEntityEmit)="touchedEntity()" (copyEntityEmit)="copyEntity($event)"
+                (deleteEntityEmit)="deleteEntity($event)" (editEntityEmit)="editEntity($event)"
+                (dropEntityEmit)="dropEntity($event)" (editGroupNameEmit)="editGroupName($event)"
+                (deleteGroupEmit)="deleteGroup($event)" [currentFormEntityList_]="currentFormEntityList">
+            </app-left-panel>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-4 mt-3">
+            <app-right-panel (addEntityEmit)="addEntity($event)" (addGroupEmit)="addGroup($event)"
+                [formEntityList_]="formEntityList"></app-right-panel>
+        </div>
+    </div>
+</div>

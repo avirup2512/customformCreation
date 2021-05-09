@@ -1,0 +1,15 @@
+<mat-card class="headerCard">
+    <button mat-button>Create Custom Form</button>
+    <div class="float-right">
+        <form [formGroup]="basicdetailsForm">
+            <div>
+                <mat-radio-group formControlName="floatLabelControl">
+                    <mat-radio-button [disabled]="true" [checked]="inEditPage || inPreviewPage && !inBasicDetailsPage"
+                        value="auto">
+                        1. Basic Details</mat-radio-button>
+                    <mat-radio-button [disabled]="true" value="always">2. Form Creation</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </form>
+    </div>
+</mat-card>
